@@ -24,14 +24,14 @@ def startNAT( root, inetIntf='eth0', subnet='10.0/8' ):
     inetIntf: interface for internet access
     subnet: Mininet subnet (default 10.0/8)="""
 
-    # Identify the interface connecting to the mininet network
+    # Identificar interface conectada a rede
     localIntf = root.defaultIntf()
 
-    # Flush any currently active rules
+    # Limpar regras ativas
     root.cmd( 'iptables -F' )
     root.cmd( 'iptables -t nat -F' )
 
-    # Create default entries for unmatched traffic
+    # Criar entradas de trfego padrao sem corresondencia
     root.cmd( 'iptables -P INPUT ACCEPT' )
     root.cmd( 'iptables -P OUTPUT ACCEPT' )
     root.cmd( 'iptables -P FORWARD DROP' )
@@ -42,16 +42,16 @@ def startNAT( root, inetIntf='eth0', subnet='10.0/8' ):
     root.cmd( 'iptables -A FORWARD -i', inetIntf, '-d', subnet, '-j ACCEPT' )
     root.cmd( 'iptables -t nat -A POSTROUTING -o ', inetIntf, '-j MASQUERADE' )
 
-    # Instruct the kernel to perform forwarding
+    # Encaminhamento kernel
     root.cmd( 'sysctl net.ipv4.ip_forward=1' )
 
 def stopNAT( root ):
     """Stop NAT/forwarding between Mininet and external network"""
-    # Flush any currently active rules
+    # Limpar regras ativas
     root.cmd( 'iptables -F' )
     root.cmd( 'iptables -t nat -F' )
 
-    # Instruct the kernel to stop forwarding
+    # Indicar o kernel p parar encaminhamento 
     root.cmd( 'sysctl net.ipv4.ip_forward=0' )
 
 def fixNetworkManager( root, intf ):
@@ -78,23 +78,23 @@ def connectToInternet( network, switch='s1', rootip='10.254', subnet='10.0/8'):
     switch = network.get( switch )
     prefixLen = subnet.split( '/' )[ 1 ]
 
-    # Create a node in root namespace
+    # Criando node no namespace raiz
     root = Node( 'root', inNamespace=False )
 
-    # Prevent network-manager from interfering with our interface
+    # Interface gerenciador prevencao
     fixNetworkManager( root, 'root-eth0' )
 
-    # Create link between root NS and switch
+    # Criando link
     link = network.addLink( root, switch )
     link.intf1.setIP( rootip, prefixLen )
 
-    # Start network that now includes link to root namespace
+    # Start network
     network.start()
 
-    # Start NAT and establish forwarding
+    # Start NAT
     startNAT( root )
 
-    # Establish routes from end hosts
+    # Estabelecndo rotas entre hosts
     for host in network.hosts:
         host.cmd( 'ip route flush root 0/0' )
         host.cmd( 'route add -net', subnet, 'dev', host.defaultIntf() )
@@ -142,4 +142,3 @@ if __name__ == '__main__':
     # Shut down NAT
     stopNAT( rootnode )
     net.stop()
-
