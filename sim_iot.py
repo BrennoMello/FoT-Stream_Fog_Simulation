@@ -1,9 +1,13 @@
 #!/usr/bin/python
 
 from mininet.cli import CLI
+from mininet.net import Mininet
+from mininet.link import TCLink
 from mininet.log import lg
 from mininet.node import Node
 from mininet.topolib import TreeNet
+from reg import utils_hosts
+from time import sleep
 import time
 import argparse
 
@@ -103,30 +107,31 @@ def connectToInternet( network, switch='s1', rootip='10.254', subnet='10.0/8'):
     return root
 
 def init_sensors(net):
-
 	global args
-	i=1	
+	i=1
+	print ("Init Sensors")	
 	for host in net.hosts:
 		#net.get(host.name).cmd("sudo python virtual_dev.py -n sensor"+str(i)+" -g gateway01 -p "+args.port+" -i "+args.ip+" -t "+args.type+" -m "+args.model+" -c "+args.cycle+" &")
-		net.get(host.name).cmd("sudo python virtual_dev.py -n sensor"+str(i)+" -g gateway01 -p "+" &")
+		#net.get(host.name).cmd("sudo python virtual_dev.py -n sensor"+str(i)+" -g gateway01 -p "+" &")
 		i=i+1
 		time.sleep(1)
 
 
 
 def init_gateways(net):
+	print("Init Gateways")
 	g=utils_hosts.return_hosts_per_type('gateway')
 	for i in range(0,len(g)):
 		#iniciar mosquitto se precisar, comentado por padrao
 		#net.get(g[i].name).cmd('mosquitto &')
 		if((i+1)<10):
-			net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-6.1.0/bin; ./start')
+			net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
 		else:
-			net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-6.1.0/bin; ./start')
+			net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
 		sleep(5)
 
 if __name__ == '__main__':
-    lg.setLogLevel( 'info')
+	lg.setLogLevel( 'info')
 	net = Mininet(link=TCLink)
     
     #criar switches, hosts e topologia
@@ -134,11 +139,12 @@ if __name__ == '__main__':
 	create_topo.create(net)
     
     # Configurar e iniciar comunicacao externa
-    rootnode = connectToInternet( net )
+	rootnode = connectToInternet( net )
     
-    #init_sensors(net)
+	init_gateways(net)
+	init_sensors(net)
     
-    CLI( net )
+	CLI( net )
     # Shut down NAT
-    stopNAT( rootnode )
-    net.stop()
+	stopNAT( rootnode )
+	net.stop()
