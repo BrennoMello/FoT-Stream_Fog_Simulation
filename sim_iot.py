@@ -141,7 +141,7 @@ if __name__ == '__main__':
     # Configurar e iniciar comunicacao externa
 	rootnode = connectToInternet( net )
     
-	init_gateways(net)
+	#init_gateways(net)
 	init_sensors(net)
     
 	CLI( net )
