@@ -48,6 +48,17 @@ def return_host_per_name(name_host):
 			return h[i]
 
 	
-
-
+def return_association():
+	f=open('/home/openflow/iot_virtual_device/reg/association_hosts.json','r')
+	lines=len(f.readlines())
+	f.close()
+	f=open('/home/openflow/iot_virtual_device/reg/association_hosts.json','r')
+	st2=[]
+	st2=f.readlines()
+	f.close()
+	devices=[]
+	for i in range(0,(lines)):
+		if(to_object(st2[i]).name_gateway!='cloud'):
+			devices.append(to_object(st2[i]))
+	return devices
 
