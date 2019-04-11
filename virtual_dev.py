@@ -12,7 +12,6 @@ import fileinput
 parser = argparse.ArgumentParser(prog='virtual_device', usage='%(prog)s [options]', description='Virtual Device')
 parser.add_argument('-n','--name', type=str, help='Device Name',required=True)
 parser.add_argument('-s','--sensor', type=str, help='Sensor Name',required=True)
-parser.add_argument('-g','--gname', type=str, help='Gateway Name',required=True)
 parser.add_argument('-p','--port', type=str, help='Broker Ports',required=True)
 parser.add_argument('-i','--ip', type=str, help='Gateway IP',required=True)
 args = parser.parse_args()
