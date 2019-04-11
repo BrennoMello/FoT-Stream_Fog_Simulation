@@ -1,5 +1,6 @@
 from mininet.node import  OVSKernelSwitch
 from mininet.link import TCLink
+from reg import utils_hosts
 def create(net):
 	#adicionando os switches
 	QTD_SWITCHES=7

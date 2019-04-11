@@ -123,7 +123,7 @@ def init_sensors(net):
 	
 	#iniciar devices virtuais
 	for i in range(0,len(d)):
-		net.get(d[i].name).cmd('cd /home/openflow/iot_virtual_device; python virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' &')
+		net.get(d[i].name).cmd('cd /home/openflow/FoT-Simulation; python virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' &')
 
 	time.sleep(7)
 
@@ -149,7 +149,8 @@ def init_flow(net):
 	for i in range(0,len(g)):
 		for j in range(0,len(ass)):
 			if(g[i].name==ass[j].name_gateway):
-				net.get(g[i].name).cmdPrint("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:10000,publish:10000}'")
+				net.get(g[i].name).cmd("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:10000,publish:10000}'")
+				time.sleep(0.2)
 
 if __name__ == '__main__':
 	lg.setLogLevel( 'info')

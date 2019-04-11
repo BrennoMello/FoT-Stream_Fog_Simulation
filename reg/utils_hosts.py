@@ -8,10 +8,10 @@ class to_object(object):
 			
 
 def return_hosts():
-	f=open('/home/openflow/iot_virtual_device/reg/data_hosts.json','r')
+	f=open('/home/openflow/FoT-Simulation/reg/data_hosts.json','r')
 	lines=len(f.readlines())
 	f.close()
-	f=open('/home/openflow/iot_virtual_device/reg/data_hosts.json','r')
+	f=open('/home/openflow/FoT-Simulation/reg/data_hosts.json','r')
 	st2=[]
 	st2=f.readlines()
 	f.close()
@@ -31,7 +31,7 @@ def return_hosts_per_type(type_host):
 
 	
 def write_host(st):
-	x=open('/home/openflow/iot_virtual_device/reg/data_hosts.json','a')
+	x=open('/home/openflow/FoT-Simulation/reg/data_hosts.json','a')
 	x.write(st+"\n")
 	x.close()
 
@@ -49,10 +49,10 @@ def return_host_per_name(name_host):
 
 	
 def return_association():
-	f=open('/home/openflow/iot_virtual_device/reg/association_hosts.json','r')
+	f=open('/home/openflow/FoT-Simulation/reg/association_hosts.json','r')
 	lines=len(f.readlines())
 	f.close()
-	f=open('/home/openflow/iot_virtual_device/reg/association_hosts.json','r')
+	f=open('/home/openflow/FoT-Simulation/reg/association_hosts.json','r')
 	st2=[]
 	st2=f.readlines()
 	f.close()
