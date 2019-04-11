@@ -15,7 +15,7 @@ parser.add_argument('-s','--sensor', type=str, help='Sensor Name',required=True)
 parser.add_argument('-p','--port', type=str, help='Broker Ports',required=True)
 parser.add_argument('-i','--ip', type=str, help='Gateway IP',required=True)
 args = parser.parse_args()
-
+#tgit
 
 #################### GLOBAL VARS
 broker=args.ip
