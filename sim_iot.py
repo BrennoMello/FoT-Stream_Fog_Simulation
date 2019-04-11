@@ -109,26 +109,47 @@ def connectToInternet( network, switch='s1', rootip='10.254', subnet='10.0/8'):
 def init_sensors(net):
 	global args
 	i=1
+	
+	#pega todos os devices/sensores
+	d=utils_hosts.return_hosts_per_type('device')
+	ass=utils_hosts.return_association()
 	print ("Init Sensors")	
-	for host in net.hosts:
-		#net.get(host.name).cmd("sudo python virtual_dev.py -n sensor"+str(i)+" -g gateway01 -p "+args.port+" -i "+args.ip+" -t "+args.type+" -m "+args.model+" -c "+args.cycle+" &")
-		#net.get(host.name).cmd("sudo python virtual_dev.py -n sensor"+str(i)+" -g gateway01 -p "+" &")
-		i=i+1
-		time.sleep(1)
+	
+	#inciar mosquitto nos devices
+	for i in range(0,len(d)):
+		net.get(d[i].name).cmd('mosquitto &')
+	
+	time.sleep(5)
+	
+	#iniciar devices virtuais
+	for i in range(0,len(d)):
+		net.get(d[i].name).cmd('cd /home/openflow/iot_virtual_device; python virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' &')
 
-
+	time.sleep(7)
 
 def init_gateways(net):
 	print("Init Gateways")
 	g=utils_hosts.return_hosts_per_type('gateway')
+	
+	
 	for i in range(0,len(g)):
 		#iniciar mosquitto se precisar, comentado por padrao
-		#net.get(g[i].name).cmd('mosquitto &')
-		if((i+1)<10):
-			net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
-		else:
-			net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
-		sleep(5)
+		net.get(g[i].name).cmd('mosquitto &')
+		#if((i+1)<10):
+			#net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
+		#else:
+			#net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
+		#sleep(5)
+	
+
+def init_flow(net):
+	print ("Temp: Init Flow")
+	g=utils_hosts.return_hosts_per_type('gateway')
+	ass=utils_hosts.return_association()
+	for i in range(0,len(g)):
+		for j in range(0,len(ass)):
+			if(g[i].name==ass[j].name_gateway):
+				net.get(g[i].name).cmdPrint("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:10000,publish:10000}'")
 
 if __name__ == '__main__':
 	lg.setLogLevel( 'info')
@@ -141,8 +162,11 @@ if __name__ == '__main__':
     # Configurar e iniciar comunicacao externa
 	rootnode = connectToInternet( net )
     
-	#init_gateways(net)
+	init_gateways(net)
 	init_sensors(net)
+	
+	#init flow eh temporario
+	init_flow(net)
     
 	CLI( net )
     # Shut down NAT
