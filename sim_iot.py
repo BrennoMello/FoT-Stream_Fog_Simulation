@@ -152,6 +152,8 @@ def init_flow(net):
 				net.get(g[i].name).cmd("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:10000,publish:10000}'")
 				time.sleep(0.2)
 
+
+
 if __name__ == '__main__':
 	lg.setLogLevel( 'info')
 	net = Mininet(link=TCLink)
