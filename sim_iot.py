@@ -18,7 +18,7 @@ args = parser.parse_args()
 
 
 #Path Server and Gateway
-gateway_path='/home/openflow/service-mix/gateway'
+gateway_path='/home/openflow/service-mix/'
 server_path='/home/openflow/service-mix/server'
 
 #################################
@@ -134,12 +134,24 @@ def init_gateways(net):
 	
 	for i in range(0,len(g)):
 		#iniciar mosquitto se precisar, comentado por padrao
-		net.get(g[i].name).cmd('mosquitto &')
-		#if((i+1)<10):
-			#net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
-		#else:
-			#net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
-		#sleep(5)
+		#net.get(g[i].name).cmd('mosquitto &')
+		if((i+1)<10):
+			net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./servicemix &')
+		else:
+			net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
+		sleep(5)
+
+def stop_gateways(net):
+	g=utils_hosts.return_hosts_per_type('gateway')
+	
+	for i in range(0,len(g)):
+		#iniciar mosquitto se precisar, comentado por padrao
+		#net.get(g[i].name).cmd('mosquitto &')
+		if((i+1)<10):
+			net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./stop &')
+		else:
+			net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./stop &')
+		sleep(5)
 	
 
 def init_flow(net):
@@ -174,4 +186,6 @@ if __name__ == '__main__':
 	CLI( net )
     # Shut down NAT
 	stopNAT( rootnode )
+	stop_gateways(net)
+	time.sleep(3)
 	net.stop()
