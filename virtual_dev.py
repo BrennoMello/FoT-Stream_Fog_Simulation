@@ -7,6 +7,7 @@ import random
 from threading import Thread
 import argparse
 import fileinput
+import data_set 
 
 ############## Parse Arguments
 parser = argparse.ArgumentParser(prog='virtual_device', usage='%(prog)s [options]', description='Virtual Device')
@@ -14,6 +15,7 @@ parser.add_argument('-n','--name', type=str, help='Device Name',required=True)
 parser.add_argument('-s','--sensor', type=str, help='Sensor Name',required=True)
 parser.add_argument('-p','--port', type=str, help='Broker Ports',required=True)
 parser.add_argument('-i','--ip', type=str, help='Gateway IP',required=True)
+parser.add_argument('-d','--dir', type=str, help='Dir Data Set',required=True)
 args = parser.parse_args()
 
 #################### GLOBAL VARS
@@ -26,7 +28,9 @@ tatu_message_type=""
 publish_msg=0
 collect_msg=0
 thread_use=False
-
+sensorName=args.name
+direc=args.dir
+dataSet = None
 
 #json to Object
 class to_object(object):
@@ -35,9 +39,10 @@ class to_object(object):
 
 ################# THREAD Flow Publish 
 class Th(Thread):
-	global publish_msg, sample, args, delta, data_samples, indice, samples_l
+	global publish_msg, sample, args, delta, data_samples, indice, samples_l, sensorName
 	
-	def __init__ (self):
+	def __init__ (self, datasetreader):
+		self.dataSetReader = datasetreader	
 		Thread.__init__(self)
 	
 	def run(self):
@@ -52,7 +57,8 @@ class Th(Thread):
 				pass
 	
 	def get_value(self):
-		return str(int(random.randint(18,37)))
+		return self.dataSetReader.next_value(sensorName)
+		#return str(int(random.randint(18,37)))
 	
 	def get_time_publish(self):
 		global publish_msg
@@ -77,13 +83,14 @@ def config_publish_collect(st,name):
 	collect_msg=int(ob.collect)
 		
 def catch_message(msg,topic):
-	global thread_use, tatu_message_type, args
+	global thread_use, tatu_message_type, args, dataSet
+	
 	if(msg.find('FLOW INFO '+args.sensor+' {collect')==0 and topic.find('dev/'+args.name)==0):
 		#iniciar flow via thread
 		tatu_message_type="flow"
 		thread_use=True
 		config_publish_collect(msg,args.name)
-		a = Th()
+		a = Th(dataSet)
 		a.daemon=True
 		a.start()
 	elif(msg.find('FLOW INFO '+args.sensor+' {turn:1}')==0 and topic.find('dev/'+name_device)==0):
@@ -98,8 +105,6 @@ def on_connect(client, userdata, flags, rc):
 	client.subscribe(topicSubscribe)
 	
 	
-		
-
 #Broker receiver
 def on_message(client, userdata, msg):
 	mensagemRecebida = str(msg.payload)
@@ -109,11 +114,12 @@ def on_message(client, userdata, msg):
 	
 	
 def config_mqtt():
-	global client
+	global client, dataSet
 	try:
 			
 			print("Init Virtual Device")
-			
+			#estatico para todos sensores
+			dataSet = data_set.DataSetReader(direc)
 			client.on_connect = on_connect
 			client.on_message = on_message
 
