@@ -10,10 +10,12 @@ from reg import utils_hosts
 from time import sleep
 import time
 import argparse
+import logging
 
 ############## Parse Arguments #####
 parser = argparse.ArgumentParser(prog='virtual_device', usage='%(prog)s [options]', description='Virtual Device')
 parser.add_argument('-p','--port', type=str, help='Broker Ports',required=True)
+parser.add_argument('-d','--dir', type=str, help='Direct data set',required=True)
 args = parser.parse_args()
 
 
@@ -116,14 +118,18 @@ def init_sensors(net):
 	print ("Init Sensors")	
 	
 	#inciar mosquitto nos devices
-	for i in range(0,len(d)):
-		net.get(d[i].name).cmd('mosquitto &')
+	#for i in range(0,len(d)):
+	#	net.get(d[i].name).cmd('mosquitto &')
 	
 	time.sleep(5)
 	
 	#iniciar devices virtuais
 	for i in range(0,len(d)):
-		net.get(d[i].name).cmd('cd /home/openflow/FoT-Simulation; python virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' &')
+		print('python virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' -d '+args.dir+' & ' + d[i].name)
+		term = net.get(d[i].name)
+		#term.cmd('screen -S virtual-dev')
+		#term.cmd('screen -r virtual-dev')
+		term.cmd('cd /home/openflow/FoT-Simulation; python virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' -d '+args.dir+' > testeh1 &')
 
 	time.sleep(7)
 
@@ -134,24 +140,24 @@ def init_gateways(net):
 	
 	for i in range(0,len(g)):
 		#iniciar mosquitto se precisar, comentado por padrao
-		#net.get(g[i].name).cmd('mosquitto &')
-		if((i+1)<10):
-			net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./servicemix &')
-		else:
-			net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
+		net.get(g[i].name).cmd('mosquitto &')
+		#if((i+1)<10):
+			#net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./servicemix &')
+		#else:
+			#net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
 		sleep(5)
 
 def stop_gateways(net):
 	g=utils_hosts.return_hosts_per_type('gateway')
 	
-	for i in range(0,len(g)):
+	#for i in range(0,len(g)):
 		#iniciar mosquitto se precisar, comentado por padrao
 		#net.get(g[i].name).cmd('mosquitto &')
-		if((i+1)<10):
-			net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./stop &')
-		else:
-			net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./stop &')
-		sleep(5)
+		#if((i+1)<10):
+			#net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./stop &')
+		#else:
+			#net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./stop &')
+		#sleep(5)
 	
 
 def init_flow(net):
@@ -161,31 +167,39 @@ def init_flow(net):
 	for i in range(0,len(g)):
 		for j in range(0,len(ass)):
 			if(g[i].name==ass[j].name_gateway):
-				net.get(g[i].name).cmd("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:10000,publish:10000}'")
+				print(g[i].name)
+				print("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:1000,publish:1000}'")
+				net.get(g[i].name).cmd("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:1000,publish:1000}'")
 				time.sleep(0.2)
 
 
 
 if __name__ == '__main__':
-	lg.setLogLevel( 'info')
-	net = Mininet(link=TCLink)
-    
-    #criar switches, hosts e topologia
-	import create_topo
-	create_topo.create(net)
-    
-    # Configurar e iniciar comunicacao externa
-	rootnode = connectToInternet( net )
-    
-	init_gateways(net)
-	init_sensors(net)
+	lg.setLogLevel('info')
+	logging.basicConfig(filename = 'app.log', level = logging.INFO)
 	
-	#init flow eh temporario
-	init_flow(net)
-    
-	CLI( net )
-    # Shut down NAT
-	stopNAT( rootnode )
-	stop_gateways(net)
-	time.sleep(3)
-	net.stop()
+	try:
+		net = Mininet(link=TCLink)
+		
+		#criar switches, hosts e topologia
+		import create_topo
+		create_topo.create(net)
+		
+		# Configurar e iniciar comunicacao externa
+		rootnode = connectToInternet( net )
+		
+		init_gateways(net)
+		init_sensors(net)
+		
+		#init flow eh temporario
+		init_flow(net)
+		
+		CLI( net )
+		# Shut down NAT
+		stopNAT( rootnode )
+		stop_gateways(net)
+		time.sleep(3)
+		net.stop()
+	except Exception as inst:
+		print(inst)
+		logging.exception(str(inst))
