@@ -17,4 +17,4 @@
 {"type":"device","name":"h17","name_iot":"ufbaino14","ip":"10.0.0.17","state":"active"}
 {"type":"device","name":"h18","name_iot":"ufbaino15","ip":"10.0.0.18","state":"active"}
 {"type":"device","name":"h19","name_iot":"ufbaino16","ip":"10.0.0.19","state":"active"}
-{"type":"gateway","name":"h20","name_iot":"ufbaino17","ip":"10.0.0.20","state":"active"}
+{"type":"server","name":"h20","name_iot":"server01","ip":"10.0.0.20","state":"active"}

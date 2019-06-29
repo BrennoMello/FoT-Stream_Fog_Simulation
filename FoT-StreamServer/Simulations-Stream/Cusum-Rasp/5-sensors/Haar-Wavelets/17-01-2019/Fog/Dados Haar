@@ -1,0 +1,118 @@
+Delay temperatureSensor2019-01-17T16:11:04.235
+TimeStamp 2019-01-17T16:14:18.178
+Windows {"deviceId":"sc02","sensorId":"temperatureSensor","localDateTime":"2019-01-17T16:11:04.235","valueSensor":["32.295","32.505","32.27","32.7","32.425","32.59","32.62","32.545","32.775","32.655"],"delayFog":193}
+Data Size 208
+initDelay 2019-01-17T16:11:05.936
+Raw Data [50.96, 50.1, 50.19, 50.44, 50.19, 50.79, 50.89, 50.25, 50.78, 50.8, 50.87, 50.19, 50.28, 50.8, 50.89, 50.98, 50.98, 50.46, 50.91, 50.71]
+sc02soundSensor Estimator x_mean: 53.27479166666667
+sc02soundSensor Sum: 7.099463382806351
+sc02soundSensor SumMin: 0.0
+Raw Data [57.34, 57.34, 57.34, 57.34, 57.34, 57.56, 57.34, 57.11, 57.34, 57.34, 57.34, 57.34, 57.11, 57.34, 57.34, 57.34, 57.34, 57.34, 57.34, 57.34]
+Haar Transform Coefficient[50.53, 50.315, 50.489999999999995, 50.57, 50.79, 50.53, 50.54, 50.935, 50.72, 50.81]
+sc02soundSensor Estimator x_mean: 53.3858
+Haar Transform Detail[-0.4299999999999997, 0.125, 0.3000000000000007, -0.3200000000000003, 0.00999999999999801, -0.33999999999999986, 0.259999999999998, 0.04499999999999815, -0.259999999999998, -0.09999999999999787]
+sc02soundSensor Sum: 9.758663382806342
+sc02soundSensor SumMin: 0.0
+Haar Transform Coefficient[57.34, 57.34, 57.45, 57.225, 57.34, 57.34, 57.225, 57.34, 57.34, 57.34]
+sc02humiditySensor Estimator x_mean: 50.46658959537573
+Haar Transform Detail[0.0, 0.0, 0.10999999999999943, -0.11500000000000199, 0.0, 0.0, 0.11500000000000199, 0.0, 0.0, 0.0]
+sc02humiditySensor Sum: 5.56678137009123
+sc02soundSensor Estimator x_mean: 53.42865384615385
+sc02humiditySensor SumMin: -29.24857488634588
+sc02luminositySensor Estimator x_mean: 59.15671874999999
+sc02luminositySensor Sum: 0.0
+sc02soundSensor Sum: 10.825009536652496
+sc02soundSensor SumMin: 0.0
+sc02humiditySensor Estimator x_mean: 50.46695402298851
+sc02luminositySensor SumMin: -32.89429187713647
+sc02humiditySensor Sum: 5.624827347102719
+sc02humiditySensor SumMin: -29.19052890933439
+sc02soundSensor Estimator x_mean: 53.25814814814815
+sc02luminositySensor Estimator x_mean: 59.10166666666666
+sc02luminositySensor Sum: 0.0
+sc02soundSensor Sum: 6.386861388504346
+sc02luminositySensor SumMin: -34.660958543803126
+sc02humiditySensor Estimator x_mean: 50.46608571428572
+sc02soundSensor SumMin: -4.438148148148149
+sc02humiditySensor Sum: 5.468741632816996
+sc02humiditySensor SumMin: -29.34661462362011
+sc02luminositySensor Estimator x_mean: 59.04985294117646
+sc02soundSensor Estimator x_mean: 53.33678571428572
+sc02humiditySensor Estimator x_mean: 50.46622159090909
+sc02humiditySensor Sum: 5.487520041907895
+sc02luminositySensor Sum: 0.0
+sc02humiditySensor SumMin: -29.327836214529206
+sc02soundSensor Sum: 8.505075674218618
+sc02luminositySensor SumMin: -36.375811484979586
+sc02soundSensor SumMin: -2.3199338624338752
+sc02humiditySensor Estimator x_mean: 50.46680790960452
+sc02humiditySensor Sum: 5.585712132303374
+sc02luminositySensor Estimator x_mean: 59.004142857142845
+sc02luminositySensor Sum: 0.0
+sc02soundSensor Estimator x_mean: 53.380172413793105
+sc02humiditySensor SumMin: -29.229644124133724
+sc02soundSensor Sum: 9.71490326042551
+sc02luminositySensor SumMin: -37.93495434212243
+sc02soundSensor SumMin: -1.1101062762269835
+sc02humiditySensor Estimator x_mean: 50.46862359550562
+sc02humiditySensor Sum: 5.902088536797751
+sc02luminositySensor Estimator x_mean: 58.95472222222221
+sc02luminositySensor Sum: 0.0
+sc02humiditySensor SumMin: -28.913267719639343
+sc02soundSensor Estimator x_mean: 53.461666666666666
+sc02luminositySensor SumMin: -39.66967656434464
+sc02soundSensor Sum: 12.073236593758851
+sc02soundSensor SumMin: 0.0
+sc02humiditySensor Estimator x_mean: 50.46896648044693
+sc02luminositySensor Estimator x_mean: 58.911081081081065
+sc02luminositySensor Sum: 0.0
+sc02humiditySensor Sum: 5.9581220563508195
+sc02luminositySensor SumMin: -41.245757645425705
+sc02soundSensor Estimator x_mean: 53.49225806451613
+sc02humiditySensor SumMin: -28.85723420008627
+sc02soundSensor Sum: 12.985978529242717
+sc02soundSensor SumMin: 0.0
+sc02luminositySensor Estimator x_mean: 58.86973684210525
+sc02humiditySensor Estimator x_mean: 50.46936111111111
+sc02luminositySensor Sum: 0.0
+sc02humiditySensor Sum: 6.023760945239704
+sc02soundSensor Estimator x_mean: 53.55078125
+sc02luminositySensor SumMin: -42.78049448753095
+sc02soundSensor Sum: 14.795197279242709
+sc02soundSensor SumMin: 0.0
+sc02humiditySensor SumMin: -28.791595311197383
+sc02luminositySensor Estimator x_mean: 58.82756410256409
+sc02luminositySensor Sum: 0.0
+Delay soundSensor2019-01-17T16:11:01.923
+sc02luminositySensor SumMin: -44.38805859009504
+sc02humiditySensor Estimator x_mean: 50.47193370165746
+sc02humiditySensor Sum: 6.481827243582241
+sc02humiditySensor SumMin: -28.333529012854843
+TimeStamp 2019-01-17T16:14:18.188
+sc02luminositySensor Estimator x_mean: 58.79037499999999
+sc02humiditySensor Estimator x_mean: 50.473296703296704
+sc02humiditySensor Sum: 6.723530540285533
+sc02luminositySensor Sum: 0.0
+sc02humiditySensor SumMin: -28.091825716151547
+sc02luminositySensor SumMin: -45.84343359009503
+Delay humiditySensor2019-01-17T16:11:00.231
+sc02luminositySensor Estimator x_mean: 58.75499999999999
+Windows {"deviceId":"sc02","sensorId":"soundSensor","localDateTime":"2019-01-17T16:11:01.923","valueSensor":["54.32","56.05","54.5","48.825","55.46","54.595","55.825","54.41","55.365","55.275"],"delayFog":196}
+sc02luminositySensor Sum: 0.0
+TimeStamp 2019-01-17T16:14:18.189
+Data Size 201
+sc02luminositySensor SumMin: -47.26343359009502
+Delay luminositySensor2019-01-17T16:11:05.936
+Windows {"deviceId":"sc02","sensorId":"humiditySensor","localDateTime":"2019-01-17T16:11:00.231","valueSensor":["50.53","50.315","50.49","50.57","50.79","50.53","50.54","50.935","50.72","50.81"],"delayFog":197}
+Data Size 202
+TimeStamp 2019-01-17T16:14:18.190
+Windows {"deviceId":"sc02","sensorId":"luminositySensor","localDateTime":"2019-01-17T16:11:05.936","valueSensor":["57.34","57.34","57.45","57.225","57.34","57.34","57.225","57.34","57.34","57.34"],"delayFog":192}
+Data Size 204
+
+
+
+Windows {"deviceId":"sc02","sensorId":"temperatureSensor","localDateTime":"2019-01-17T16:04:23.781","valueSensor":["32.375","32.625","32.85","32.575","32.435","32.65","32.56","32.72","32.55","32.565"],"delayFog":193}
+
+Raw Data [32.14, 32.61, 32.81, 32.44, 32.93, 32.77, 32.57, 32.58, 32.27, 32.6, 32.78, 32.52, 32.2, 32.92, 32.49, 32.95, 32.17, 32.93, 32.29, 32.84]
+
+

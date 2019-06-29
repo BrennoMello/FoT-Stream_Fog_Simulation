@@ -1,0 +1,4 @@
+dataSet_humid.txt filter=lfs diff=lfs merge=lfs -text
+dataSet_ligh.txt filter=lfs diff=lfs merge=lfs -text
+dataSet_temp.txt filter=lfs diff=lfs merge=lfs -text
+dataSet_volt.txt filter=lfs diff=lfs merge=lfs -text

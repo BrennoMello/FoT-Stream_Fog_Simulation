@@ -1,0 +1,3 @@
+{"delayFog": 114, "LatencyWindow": "116", "WindowSize": 199, "deviceId": "sc01", "localDateTime": "2019-01-04T03:01:36.225", "sensorId": "luminositySensor", "valueSensor": ["52.4", "54.07", "53.43", "53.02", "52.4", "53.64", "52.61", "53.64", "52.4", "33.52"]}
+{"delayFog": 114, "LatencyWindow": "114", "WindowSize": 195, "deviceId": "sc01", "localDateTime": "2019-01-04T03:24:00.751", "sensorId": "luminositySensor", "valueSensor": ["0.95", "0.89", "0.89", "0.89", "0.89", "0.84", "44.99", "46.24", "47.71", "47.9"]}
+{"delayFog": 114, "LatencyWindow": "114", "WindowSize": 201, "deviceId": "sc01", "localDateTime": "2019-01-04T03:31:00.889", "sensorId": "luminositySensor", "valueSensor": ["44.81", "48.08", "48.27", "47.52", "45.88", "43.43", "46.97", "45.7", "47.34", "47.71"]}

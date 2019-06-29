@@ -1,0 +1,3 @@
+{"name":"gateway01","ip":"10.0.0.1","server":"10.0.0.20","name_server":"h20"}
+{"name":"gateway02","ip":"10.0.0.5","server":"10.0.0.20","name_server":"h20"}
+{"name":"gateway03","ip":"10.0.0.10","server":"10.0.0.20","name_server":"h20"}

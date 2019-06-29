@@ -100,7 +100,7 @@ def connectToInternet( network, switch='s1', rootip='10.254', subnet='10.0/8'):
     # Start NAT
     startNAT( root )
 
-    # Estabelecndo rotas entre hosts
+    # Estabelecendo rotas entre hosts
     for host in network.hosts:
         host.cmd( 'ip route flush root 0/0' )
         host.cmd( 'route add -net', subnet, 'dev', host.defaultIntf() )
@@ -129,23 +129,50 @@ def init_sensors(net):
 		term = net.get(d[i].name)
 		#term.cmd('screen -S virtual-dev')
 		#term.cmd('screen -r virtual-dev')
-		term.cmd('cd /home/openflow/FoT-Simulation; python virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' -d '+args.dir+' > testeh1 &')
+		term.cmd('cd /home/openflow/FoT-Simulation; python virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' -d '+args.dir+' > virtual-device &')
 
 	time.sleep(7)
+
+def init_server(net):
+	print("Init Server")
+	g=utils_hosts.return_hosts_per_type('server')
+	
+	for i in range(0,len(g)):
+		#iniciar kafka e ....
+		print(g[i].name)
+		server = net.get(g[i].name)
+		server.cmd('cd /home/openflow/FoT-Simulation/kafka_2.11-1.0.0; bin/zookeeper-server-start.sh config/zookeeper.properties > zookeeper-log &')
+		time.sleep(10	)
+		server.cmd('cd /home/openflow/FoT-Simulation/kafka_2.11-1.0.0; bin/kafka-server-start.sh config/server.properties > kafka-log &')
+		print('python FoT-StreamServer.py -n '+ g[i].name + ' -i ' + g[i].ip  + ' -p 9092 > server-log-'+ g[i].name +' &')
+		server.cmd('cd /home/openflow/FoT-Simulation/FoT-StreamServer/kafka-mqtt; python FoT-StreamServer.py -n '+ g[i].name + ' -i '+ g[i].ip +' -p 9092 > server-log-'+ g[i].name +' &')	
+		
+		sleep(5)
+		
 
 def init_gateways(net):
 	print("Init Gateways")
 	g=utils_hosts.return_hosts_per_type('gateway')
-	
+	ass=utils_hosts.return_association_server()
 	
 	for i in range(0,len(g)):
 		#iniciar mosquitto se precisar, comentado por padrao
-		net.get(g[i].name).cmd('mosquitto &')
+		gateway = net.get(g[i].name)
+		gateway.cmd('mosquitto &')
+		print('python FoT-StreamGateway.py -n '+ g[i].name + ' -i ' + ass[i].server +' -p 9092 > gateway-log-'+g[i].name+'&')
+		gateway.cmd('cd /home/openflow/FoT-Simulation; python FoT-StreamGateway.py -n '+ g[i].name + ' -i ' + ass[i].server +' -p 9092 > gateway-log-'+g[i].name+'&')	
+		
+		sleep(5)
+
+	
+	#for i in range(0,len(g)):
+		#iniciar mosquitto se precisar, comentado por padrao
+		#net.get(g[i].name).cmd('mosquitto &')
 		#if((i+1)<10):
 			#net.get(g[i].name).cmd('cd '+gateway_path+'/0'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./servicemix &')
 		#else:
 			#net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./start')
-		sleep(5)
+		#sleep(5)
 
 def stop_gateways(net):
 	g=utils_hosts.return_hosts_per_type('gateway')
@@ -158,7 +185,21 @@ def stop_gateways(net):
 		#else:
 			#net.get(g[i].name).cmd('cd '+gateway_path+'/'+str(i+1)+'/apache-servicemix-7.0.1/bin; ./stop &')
 		#sleep(5)
+
+def stop_servers(net):
+	print("Stop Servers")
+	g=utils_hosts.return_hosts_per_type('server')
 	
+	for i in range(0,len(g)):
+		#iniciar kafka e ....
+		print(g[i].name)
+		server = net.get(g[i].name)
+		server.cmd('cd /home/openflow/FoT-Simulation/kafka_2.11-1.0.0; bin/kafka-server-stop.sh > kafka-log &')
+		time.sleep(20)
+		server.cmd('cd /home/openflow/FoT-Simulation/kafka_2.11-1.0.0; zookeeper-server-stop.sh > zookeeper-log &')
+		print('python FoT-StreamServer.py -n '+ g[i].name + ' -i ' + g[i].ip  + ' -p 9092 > server &')
+				
+		sleep(5)
 
 def init_flow(net):
 	print ("Temp: Init Flow")
@@ -188,6 +229,7 @@ if __name__ == '__main__':
 		# Configurar e iniciar comunicacao externa
 		rootnode = connectToInternet( net )
 		
+		init_server(net)
 		init_gateways(net)
 		init_sensors(net)
 		
@@ -198,6 +240,7 @@ if __name__ == '__main__':
 		# Shut down NAT
 		stopNAT( rootnode )
 		stop_gateways(net)
+		stop_servers(net)
 		time.sleep(3)
 		net.stop()
 	except Exception as inst:

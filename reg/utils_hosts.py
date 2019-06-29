@@ -46,8 +46,16 @@ def return_host_per_name(name_host):
 	for i in range(0,len(h)):
 		if(str(h[i].name)==name_host or str(h[i].name_iot)==name_host):
 			return h[i]
-
-	
+			
+def return_association_server():
+	lines = open('/home/openflow/FoT-Simulation/association_gateway_server.json','r')
+	devices=[]
+	for l in lines:
+		#print(l)
+		devices.append(to_object(l))
+	lines.close()
+	return devices	
+		
 def return_association():
 	f=open('/home/openflow/FoT-Simulation/reg/association_hosts.json','r')
 	lines=len(f.readlines())
