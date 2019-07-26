@@ -7,7 +7,12 @@ import random
 from threading import Thread
 import argparse
 import fileinput
-
+import data_set 
+from FoTStreamServer.conceptdrift.algorithms import cusum
+from FoTStreamServer.conceptdrift.algorithms import adwin
+from traceback import print_exc
+from kafka import KafkaProducer
+import pywt
 
 ############## Parse Arguments
 parser = argparse.ArgumentParser(prog='FoT-StreamGateway', usage='%(prog)s [options]', description='FoT-Stream Gateway')
@@ -19,10 +24,16 @@ args = parser.parse_args()
 
 brokerMQTT = 'localhost'
 portBrokerMQTT = 1883
-kafka_ServerIp=args.ip
-kafka_ServerPort = args.port
+kafka_ServerIp = args.ip+':'+args.port
+#kafka_ServerPort = args.port
 keepAliveBrokerMQTT = 60
 client = mqtt.Client(client_id = '', clean_session=True, userdata=None, protocol = mqtt.MQTTv31)
+producerKafka = KafkaProducer(bootstrap_servers=kafka_ServerIp)
+
+#wavelet = pywt.Wavelet('haar')
+
+sensoresData = {}
+dicDetectors = {}
 
 # funcao chamada quando a conexao for realizada, sendo
 # entao realizada a subscricao
@@ -39,27 +50,107 @@ def on_message(client, userdata, msg):
     #v = unpack(">H",msg.payload)[0]
     #print msg.topic + "/" + str(v)
 	try:
-		#message = str(msg.payload)
 		#print (msg.payload)
-		parser_msg(msg.payload)
+		dataRaw = json.loads(msg.payload)
+		value = parser_msg_value(dataRaw)
+		nameSensor = parser_sensor_name(dataRaw)
+		
+		insert_window(nameSensor, value)
+		check_windows()
+		
+		#print value
+		#print nameSensor
 	except Exception as inst:
+		print_exc()
 		print(inst)
 
-def parser_msg(msg):
-	if(msg.find('BODY') != -1):
-		try:
-			#print json.loads(msg)
-			msg = to_object(msg)
-			print msg.BODY['temperatureSensor']
-			value = msg.BODY['temperatureSensor']
+def insert_window(sensor, data):
+	global sensoresData
+	try:
+		#print (sensoresData.get[sensor])
+		
+		if sensor in sensoresData:
+			sensoresData[sensor].append(data)
+			#print "insert"
+		else:
+			sensoresData[sensor] = []
+			dicDetectors[sensor] = adwin.ADWINChangeDetector()
+			#print "new"
+		
+		#dicDetectors[sensor].run(data)
+		
+		#print dicDetectors[sensor].get_settings()
+		
+		check_windows()
+	
+	except Exception as inst:
+		print_exc()
+		print(inst)
+	
+	
+
+def check_windows():
+	for indexSensor in sensoresData:
+		#print len(sensoresData[indexSensor])
+		if len(sensoresData[indexSensor]) >= 30:
+			print 'detecting concept drift ' +  indexSensor
+			detectChange = False
 			
-			print float(str(value))
+			cA, cD = pywt.dwt(sensoresData[indexSensor], 'haar')
+			print cA, cD
+			
+			listMessageKafkaCa = []
+			sendMessaKafka = False
+			for data in cA:
+				
+				listMessageKafkaCa.append(data)
+				warning_status, detectChange = dicDetectors[indexSensor].run(data)
+				if detectChange == True:
+					sendMessaKafka = True
+			
+			
+			if sendMessaKafka == True:			
+				print 'send message kafka server ' + indexSensor
+				json_message = {'gatewayID':args.name ,'name':indexSensor, 'values':listMessageKafkaCa}
+				print(json_message)
+				json_array = json.dumps(json_message)
+				print(json_array)
+				producerKafka.send('dev', str(json_array))
+			else:
+				print 'no drift detect ' + indexSensor
+			#if detectChange == False:
+			sensoresData[indexSensor] = []
+			
+				
+				
+				
+	return None
+
+
+
+def parser_sensor_name(data):
+	if(str(data).find('BODY') != -1):
+		try:
+				
+			header = data['HEADER']
+			name = header['NAME']
+	
+			return name
+		except Exception as inst:
+			print(inst)
+
+
+def parser_msg_value(data):
+	if(str(data).find('BODY') != -1):
+		try:
+				
+			body = data['BODY']
+			value = body['temperatureSensor']
+	
+			return float(value[0])
 		except Exception as inst:
 			print(inst)
 		
-
-def create_window(sensor, data):
-	return None
 
 class to_object(object):
 	def __init__(self, j):

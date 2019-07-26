@@ -9,6 +9,7 @@ import argparse
 import fileinput
 import data_set 
 import logging
+from traceback import print_exc
 
 ############## Parse Arguments
 parser = argparse.ArgumentParser(prog='virtual_device', usage='%(prog)s [options]', description='Virtual Device')
@@ -16,7 +17,8 @@ parser.add_argument('-n','--name', type=str, help='Device Name',required=True)
 parser.add_argument('-s','--sensor', type=str, help='Sensor Name',required=True)
 parser.add_argument('-p','--port', type=str, help='Broker Ports',required=True)
 parser.add_argument('-i','--ip', type=str, help='Gateway IP',required=True)
-parser.add_argument('-d','--dir', type=str, help='Dir Data Set',required=True)
+parser.add_argument('-d','--direc', type=str, help='Direc Data Set',required=True)
+parser.add_argument('-m','--mote', type=str, help='Mote id Sensor',required=True)
 args = parser.parse_args()
 
 #################### GLOBAL VARS
@@ -30,8 +32,9 @@ publish_msg=0
 collect_msg=0
 thread_use=False
 sensorName=args.sensor
-direc=args.dir
+direc=args.direc
 dataSet = None
+moteid = args.mote
 logging.basicConfig(filename = 'app.log', level = logging.INFO)
 
 #json to Object
@@ -41,15 +44,16 @@ class to_object(object):
 
 ################# THREAD Flow Publish 
 class Th(Thread):
-	global publish_msg, sample, args, delta, data_samples, indice, samples_l, sensorName
+	global publish_msg, sample, args, delta, data_samples, indice, samples_l, sensorName, direc, moteid
 	
 	def __init__ (self):
 		print("Init Thread")
 			
 		try:
-			self.dataSetReader = data_set.DataSetReader(direc)	
+			self.dataSetReader = data_set.DataSetReader(direc, sensorName, moteid)	
 			print("data set open:  "+ str(self.dataSetReader.next_value(sensorName)))
 		except Exception as inst:
+			print_exc()
 			print(inst)
 			logging.exception(str(inst))
 		Thread.__init__(self)
@@ -66,6 +70,7 @@ class Th(Thread):
 					time.sleep(float(self.get_time_publish())-float(fim-ini))
 					
 				except Exception as inst:
+					print_exc()
 					print(inst)
 					logging.exception(str(inst))
 			elif(tatu_message_type=="evt" and delta!=0):
