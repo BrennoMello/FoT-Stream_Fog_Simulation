@@ -1,0 +1,6 @@
+[2019-06-28 03:23:54,357] DEBUG preRegister called. Server=com.sun.jmx.mbeanserver.JmxMBeanServer@d3c617, name=log4j:logger=state.change.logger (state.change.logger)
+[2019-06-28 03:25:14,658] DEBUG preRegister called. Server=com.sun.jmx.mbeanserver.JmxMBeanServer@d3c617, name=log4j:logger=state.change.logger (state.change.logger)
+[2019-06-28 03:25:21,894] TRACE [Controller id=0 epoch=1] Received response {error_code=0} for a request sent to broker ufba:9092 (id: 0 rack: null) (state.change.logger)
+[2019-06-28 03:26:42,524] DEBUG preRegister called. Server=com.sun.jmx.mbeanserver.JmxMBeanServer@d3c617, name=log4j:logger=state.change.logger (state.change.logger)
+[2019-06-28 03:35:34,124] DEBUG preRegister called. Server=com.sun.jmx.mbeanserver.JmxMBeanServer@d3c617, name=log4j:logger=state.change.logger (state.change.logger)
+[2019-06-28 03:40:03,057] DEBUG preRegister called. Server=com.sun.jmx.mbeanserver.JmxMBeanServer@d3c617, name=log4j:logger=state.change.logger (state.change.logger)

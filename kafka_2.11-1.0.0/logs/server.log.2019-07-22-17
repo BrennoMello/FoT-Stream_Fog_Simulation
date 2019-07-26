@@ -1,0 +1,7 @@
+[2019-07-22 17:04:26,340] INFO [GroupMetadataManager brokerId=0] Group server transitioned to Dead in generation 8 (kafka.coordinator.group.GroupMetadataManager)
+[2019-07-22 17:04:26,341] INFO [GroupMetadataManager brokerId=0] Removed 1 expired offsets in 2 milliseconds. (kafka.coordinator.group.GroupMetadataManager)
+[2019-07-22 17:14:26,339] INFO [GroupMetadataManager brokerId=0] Removed 0 expired offsets in 0 milliseconds. (kafka.coordinator.group.GroupMetadataManager)
+[2019-07-22 17:24:26,339] INFO [GroupMetadataManager brokerId=0] Removed 0 expired offsets in 0 milliseconds. (kafka.coordinator.group.GroupMetadataManager)
+[2019-07-22 17:34:26,339] INFO [GroupMetadataManager brokerId=0] Removed 0 expired offsets in 0 milliseconds. (kafka.coordinator.group.GroupMetadataManager)
+[2019-07-22 17:44:26,339] INFO [GroupMetadataManager brokerId=0] Removed 0 expired offsets in 0 milliseconds. (kafka.coordinator.group.GroupMetadataManager)
+[2019-07-22 17:54:26,339] INFO [GroupMetadataManager brokerId=0] Removed 0 expired offsets in 0 milliseconds. (kafka.coordinator.group.GroupMetadataManager)

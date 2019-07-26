@@ -1,0 +1,7 @@
+[2017-11-16 17:11:12,748] INFO The cleaning for partition temp-0 is aborted and paused (kafka.log.LogCleaner)
+[2017-11-16 17:11:12,748] INFO Compaction for partition temp-0 is resumed (kafka.log.LogCleaner)
+[2017-11-16 17:11:12,748] INFO The cleaning for partition temp-0 is aborted (kafka.log.LogCleaner)
+[2017-11-16 17:36:59,478] INFO Shutting down the log cleaner. (kafka.log.LogCleaner)
+[2017-11-16 17:36:59,489] INFO [kafka-log-cleaner-thread-0]: Shutting down (kafka.log.LogCleaner)
+[2017-11-16 17:36:59,489] INFO [kafka-log-cleaner-thread-0]: Stopped (kafka.log.LogCleaner)
+[2017-11-16 17:36:59,489] INFO [kafka-log-cleaner-thread-0]: Shutdown completed (kafka.log.LogCleaner)

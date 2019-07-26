@@ -1,0 +1,2 @@
+{"delayFog": 168, "LatencyWindow": "171", "WindowSize": 201, "deviceId": "sc02", "localDateTime": "2019-01-09T04:08:53.790", "sensorId": "luminositySensor", "valueSensor": ["37.67", "38.89", "38.12", "38.28", "41.1", "40.78", "38.28", "42.25", "38.89", "38.43"]}
+{"delayFog": 168, "LatencyWindow": "168", "WindowSize": 212, "deviceId": "sc02", "localDateTime": "2019-01-09T15:12:51.289", "sensorId": "luminositySensor", "valueSensor": ["153.98", "153.98", "153.98", "153.98", "153.17", "152.37", "113.58", "134.84", "150.78", "132.86"]}
