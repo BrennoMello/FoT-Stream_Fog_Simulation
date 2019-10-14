@@ -67,6 +67,9 @@ class Th(Thread):
 					ini=timeit.default_timer()
 					a=self.publish()
 					fim=timeit.default_timer()
+					print self.get_time_publish()
+					print float(fim-ini)
+					#print float(self.get_time_publish())-float(fim-ini)
 					time.sleep(float(self.get_time_publish())-float(fim-ini))
 					
 				except Exception as inst:
@@ -89,7 +92,7 @@ class Th(Thread):
 		
 		if(tatu_message_type=="flow"):
 			a= "{\"CODE\":\"POST\",\"METHOD\":\"FLOW\",\"HEADER\":{\"NAME\":\""+str(args.name)+"\"},\"BODY\":{\""+str(args.sensor)+"\":[\""+str(self.get_value())+"\"],\"FLOW\":{\"publish\":"+str(publish_msg)+",\"collect\":"+str(collect_msg)+"}}}"
-			#print(a)
+			print(a)
 			client.publish('dev/'+args.name,a)
 			
 
@@ -112,6 +115,7 @@ def catch_message(msg,topic):
 		#iniciar flow via thread
 		try:		
 			tatu_message_type="flow"
+			print(tatu_message_type)
 			thread_use=True
 			config_publish_collect(msg,args.name)
 			a = Th()
@@ -136,7 +140,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
 	mensagemRecebida = str(msg.payload)
 	#chegou msg
-	#print ("On Message: ",mensagemRecebida," topic: ",msg.topic)
+	print ("On Message: ",mensagemRecebida," topic: ",msg.topic)
 	catch_message(mensagemRecebida,str(msg.topic))
 	
 	
