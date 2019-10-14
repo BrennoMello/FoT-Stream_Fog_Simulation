@@ -12,7 +12,8 @@ from FoTStreamServer.conceptdrift.algorithms import cusum
 from FoTStreamServer.conceptdrift.algorithms import adwin
 from traceback import print_exc
 from kafka import KafkaProducer
-import pywt
+#import pywt
+from FoTStreamServer.kafkaMqtt import Wavelet
 
 ############## Parse Arguments
 parser = argparse.ArgumentParser(prog='FoT-StreamGateway', usage='%(prog)s [options]', description='FoT-Stream Gateway')
@@ -34,6 +35,7 @@ producerKafka = KafkaProducer(bootstrap_servers=kafka_ServerIp)
 
 sensoresData = {}
 dicDetectors = {}
+objWavelet = Wavelet.Wavelet()
 
 # funcao chamada quando a conexao for realizada, sendo
 # entao realizada a subscricao
@@ -47,8 +49,9 @@ def on_connect(client, userdata, flags, rc):
 # funcao chamada quando uma nova mensagem do topico eh gerada
 def on_message(client, userdata, msg):
     # decodificando o valor recebido
-    #v = unpack(">H",msg.payload)[0]
-    #print msg.topic + "/" + str(v)
+	#v = unpack(">H",msg.payload)[0]
+	#print (msg.topic + "/" + str(v))
+	#print ("New Message")
 	try:
 		#print (msg.payload)
 		dataRaw = json.loads(msg.payload)
@@ -96,12 +99,20 @@ def check_windows():
 			print 'detecting concept drift ' +  indexSensor
 			detectChange = False
 			
-			cA, cD = pywt.dwt(sensoresData[indexSensor], 'haar')
-			print cA, cD
+			print("Complete List")
+			print(sensoresData[indexSensor])
+			
+			#cA, cD = pywt.dwt(sensoresData[indexSensor], 'haar')
+			#print (cA)
+			#print (cD)
+			
+			cA = objWavelet.pyramid(sensoresData[indexSensor],1)
+			print("Wavelet Data")
+			print(cA)
 			
 			listMessageKafkaCa = []
 			sendMessaKafka = False
-			for data in cA:
+			for data in cA[1]:
 				
 				listMessageKafkaCa.append(data)
 				warning_status, detectChange = dicDetectors[indexSensor].run(data)

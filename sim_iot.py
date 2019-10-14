@@ -126,11 +126,11 @@ def init_sensors(net):
 	
 	#iniciar devices virtuais
 	for i in range(0,len(d)):
-		print('python virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' -d '+args.direc+ ' -m  ' + d[i].moteid +' > virtual-device &')
+		print('python2.7 virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' -d '+args.direc+ ' -m  ' + d[i].moteid +' > virtual-device &')
 		term = net.get(d[i].name)
 		#term.cmd('screen -S virtual-dev')
 		#term.cmd('screen -r virtual-dev')
-		term.cmd('cd /home/openflow/FoT-Simulation; python virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' -d '+args.direc+ ' -m  ' + d[i].moteid +' > virtual-device &')
+		term.cmd('cd /home/mininet/FoT-Simulation; python2.7 virtual_dev.py -n '+ass[i].name+' -s temperatureSensor -p '+args.port+' -i '+ass[i].gateway+' -d '+args.direc+ ' -m  ' + d[i].moteid +' > virtual-device-'+ d[i].name +'&')
 
 	time.sleep(7)
 
@@ -142,11 +142,13 @@ def init_server(net):
 		#iniciar kafka e ....
 		print(g[i].name)
 		server = net.get(g[i].name)
-		server.cmd('cd /home/openflow/FoT-Simulation/kafka_2.11-1.0.0; bin/zookeeper-server-start.sh config/zookeeper.properties > zookeeper-log &')
+		server.cmd('cd /home/mininet/FoT-Simulation/; python2.7 sc_net.py -n '+g[i].name+' &')
+		time.sleep(5)
+		server.cmd('cd /home/mininet/FoT-Simulation/kafka_2.11-1.0.0; bin/zookeeper-server-start.sh config/zookeeper.properties > zookeeper-log &')
 		time.sleep(10)
-		server.cmd('cd /home/openflow/FoT-Simulation/kafka_2.11-1.0.0; bin/kafka-server-start.sh config/server.properties > kafka-log &')
-		print('python FoT-StreamServer.py -n '+ g[i].name + ' -i ' + g[i].ip  + ' -p 9092 > server-log-'+ g[i].name +' &')
-		server.cmd('cd /home/openflow/FoT-Simulation/FoTStreamServer/kafka-mqtt; python FoT-StreamServer.py -n '+ g[i].name + ' -i '+ g[i].ip +' -p 9092 > server-log-'+ g[i].name +' &')	
+		server.cmd('cd /home/mininet/FoT-Simulation/kafka_2.11-1.0.0; bin/kafka-server-start.sh config/server.properties > kafka-log &')
+		print('python3 FoT-StreamServer.py -n '+ g[i].name + ' -i ' + g[i].ip  + ' -p 9092 > server-log-'+ g[i].name +' &')
+		#server.cmd('cd /home/mininet/FoT-Simulation/FoTStreamServer/kafkaMqtt; python3 FoT-StreamServer.py -n '+ g[i].name + ' -i '+ g[i].ip +' -p 9092 > server-log-'+ g[i].name +' &')	
 		
 		sleep(5)
 		
@@ -160,8 +162,10 @@ def init_gateways(net):
 		#iniciar mosquitto se precisar, comentado por padrao
 		gateway = net.get(g[i].name)
 		gateway.cmd('mosquitto &')
-		print('python FoT-StreamGateway.py -n '+ g[i].name + ' -i ' + ass[i].server +' -p 9092 > gateway-log-'+g[i].name+ ' &')
-		gateway.cmd('cd /home/openflow/FoT-Simulation; python FoT-StreamGateway.py -n '+ g[i].name + ' -i ' + ass[i].server +' -p 9092 > gateway-log-'+g[i].name+' &')	
+		gateway.cmd('cd /home/mininet/FoT-Simulation; python2.7 sc_net.py -n '+g[i].name+' &')
+		time.sleep(5)
+		print('python2.7 FoT-StreamGateway.py -n '+ g[i].name + ' -i ' + ass[i].server +' -p 9092 > gateway-log-'+g[i].name+ ' &')
+		gateway.cmd('cd /home/mininet/FoT-Simulation; python2.7 FoT-StreamGateway.py -n '+ g[i].name + ' -i ' + ass[i].server +' -p 9092 > gateway-log-'+g[i].name+' &')	
 		
 		sleep(5)
 
@@ -195,10 +199,10 @@ def stop_servers(net):
 		#iniciar kafka e ....
 		print(g[i].name)
 		server = net.get(g[i].name)
-		server.cmd('cd /home/openflow/FoT-Simulation/kafka_2.11-1.0.0; bin/kafka-server-stop.sh > kafka-log &')
+		server.cmd('cd /home/mininet/FoT-Simulation/kafka_2.11-1.0.0; bin/kafka-server-stop.sh > kafka-log &')
 		time.sleep(20)
-		server.cmd('cd /home/openflow/FoT-Simulation/kafka_2.11-1.0.0; zookeeper-server-stop.sh > zookeeper-log &')
-		print('python FoT-StreamServer.py -n '+ g[i].name + ' -i ' + g[i].ip  + ' -p 9092 > server &')
+		server.cmd('cd /home/mininet/FoT-Simulation/kafka_2.11-1.0.0; zookeeper-server-stop.sh > zookeeper-log &')
+		print('python3 FoT-StreamServer.py -n '+ g[i].name + ' -i ' + g[i].ip  + ' -p 9092 > server &')
 				
 		sleep(5)
 
@@ -210,8 +214,8 @@ def init_flow(net):
 		for j in range(0,len(ass)):
 			if(g[i].name==ass[j].name_gateway):
 				print(g[i].name)
-				print("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:1000,publish:1000}'")
-				net.get(g[i].name).cmd("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:1000,publish:1000}'")
+				print("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:"+ ass[j].collect +",publish:"+ ass[j].collect +"}'")
+				net.get(g[i].name).cmd("mosquitto_pub -t 'dev/"+ass[j].name+"' -m 'FLOW INFO temperatureSensor {collect:"+ ass[j].collect +",publish:"+ ass[j].collect +"}'")
 				time.sleep(0.2)
 
 
